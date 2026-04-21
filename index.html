@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d3b66" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Nurkowanie" />
+    <meta
+      name="description"
+      content="Kalkulator czasu nurkowania w modelu z rezerwą 50 bar, gotowy do uruchomienia jako PWA na iPhone."
+    />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Kalkulator Czasu Nurkowania</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">PWA dla iPhone</p>
+        <h1>Kalkulator czasu nurkowania</h1>
+        <p class="hero-copy">
+          Oblicza czas denny na podstawie głębokości, pojemności butli i zużycia
+          powietrza. Model bazuje na materiale z prezentacji: ciśnienie
+          hydrostatyczne, zapas 50 bar i zużycie proporcjonalne do ciśnienia.
+        </p>
+      </section>
+
+      <section class="layout">
+        <form class="panel form-panel" id="calculator-form">
+          <div class="panel-head">
+            <h2>Parametry nurkowania</h2>
+            <button class="ghost-button" type="button" id="toggle-advanced">
+              Pokaż ustawienia
+            </button>
+          </div>
+
+          <label class="field">
+            <span>Głębokość</span>
+            <div class="input-wrap">
+              <input id="depth" name="depth" type="number" min="1" max="60" step="1" value="20" required />
+              <small>m</small>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Pojemność butli</span>
+            <div class="input-wrap">
+              <input id="tankVolume" name="tankVolume" type="number" min="1" max="30" step="0.1" value="12" required />
+              <small>l</small>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Zużycie powietrza (SAC)</span>
+            <div class="input-wrap">
+              <input id="sacRate" name="sacRate" type="number" min="1" max="60" step="0.1" value="25" required />
+              <small>l/min</small>
+            </div>
+          </label>
+
+          <div class="advanced is-hidden" id="advanced-fields">
+            <label class="field">
+              <span>Ciśnienie butli</span>
+              <div class="input-wrap">
+                <input id="tankPressure" name="tankPressure" type="number" min="50" max="300" step="1" value="200" required />
+                <small>bar</small>
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Rezerwa bezpieczeństwa</span>
+              <div class="input-wrap">
+                <input id="reservePressure" name="reservePressure" type="number" min="0" max="100" step="1" value="50" required />
+                <small>bar</small>
+              </div>
+            </label>
+          </div>
+        </form>
+
+        <section class="panel result-panel">
+          <div class="result-badge">Czas denny</div>
+          <output class="primary-result" id="bottomTime">24 min</output>
+          <p class="result-note" id="resultSummary">
+            Dla 20 m, butli 12 l i SAC 25 l/min.
+          </p>
+
+          <div class="stat-grid">
+            <article class="stat-card">
+              <span>Ciśnienie otoczenia</span>
+              <strong id="ambientPressure">3.0 bar</strong>
+            </article>
+            <article class="stat-card">
+              <span>Dostępne powietrze</span>
+              <strong id="usableAir">1800 l</strong>
+            </article>
+            <article class="stat-card">
+              <span>Zużycie na głębokości</span>
+              <strong id="depthConsumption">75 l/min</strong>
+            </article>
+          </div>
+
+          <ol class="formula-list" id="formulaList">
+            <li>Pamb = 1 + 20 / 10 = 3.0 bar</li>
+            <li>Vusable = 12 × (200 - 50) = 1800 l</li>
+            <li>SCR = 25 × 3.0 = 75 l/min</li>
+            <li>T = 1800 / 75 = 24 min</li>
+          </ol>
+        </section>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-head">
+          <h2>Zależność czasu od głębokości</h2>
+          <p>Przeliczenie dla zakresu 1-40 m przy tych samych parametrach butli i SAC.</p>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart" viewBox="0 0 640 360" role="img" aria-labelledby="chart-title chart-desc">
+            <title id="chart-title">Wykres czasu nurkowania względem głębokości</title>
+            <desc id="chart-desc">
+              Wykres pokazuje spadek czasu dennego wraz ze wzrostem głębokości.
+            </desc>
+            <g id="chart-grid"></g>
+            <path id="chart-line" class="chart-line" d=""></path>
+            <line id="chart-focus-x" class="chart-focus" x1="0" y1="0" x2="0" y2="0"></line>
+            <line id="chart-focus-y" class="chart-focus" x1="0" y1="0" x2="0" y2="0"></line>
+            <circle id="chart-point" class="chart-point" r="6" cx="0" cy="0"></circle>
+            <text id="chart-label" class="chart-label" x="0" y="0"></text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="panel install-panel">
+        <h2>Uruchomienie na iPhone</h2>
+        <p>
+          Po wdrożeniu na HTTPS otwórz stronę w Safari i wybierz
+          <strong>Udostępnij → Do ekranu początkowego</strong>. Aplikacja działa
+          offline po pierwszym załadowaniu.
+        </p>
+      </section>
+    </main>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

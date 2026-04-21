@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="sea" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d3b66" />
+      <stop offset="100%" stop-color="#1c7293" />
+    </linearGradient>
+    <linearGradient id="tank" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f7fbff" />
+      <stop offset="100%" stop-color="#d8ebfa" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#sea)" />
+  <circle cx="124" cy="118" r="32" fill="#f4a261" opacity="0.92" />
+  <path d="M0 334c52-21 104-21 156 0s104 21 156 0 104-21 200 10v168H0Z" fill="#68b0c9" opacity="0.34" />
+  <rect x="192" y="108" width="132" height="248" rx="56" fill="url(#tank)" />
+  <rect x="224" y="82" width="68" height="50" rx="18" fill="#d8ebfa" />
+  <rect x="240" y="60" width="36" height="26" rx="10" fill="#f4a261" />
+  <path d="M146 388c39-71 74-107 108-107 46 0 78 66 124 66 25 0 49-14 75-40" fill="none" stroke="#f4a261" stroke-linecap="round" stroke-width="22" />
+  <circle cx="154" cy="390" r="20" fill="#f7fbff" />
+  <circle cx="405" cy="307" r="20" fill="#f7fbff" />
+  <circle cx="372" cy="140" r="18" fill="#f7fbff" opacity="0.8" />
+  <circle cx="404" cy="106" r="10" fill="#f7fbff" opacity="0.65" />
+</svg>
